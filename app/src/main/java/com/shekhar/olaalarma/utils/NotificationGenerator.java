@@ -1,4 +1,4 @@
-package com.shekhar.olaalarma;
+package com.shekhar.olaalarma.utils;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,7 +7,8 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.shekhar.olaalarma.utils.CallBack;
+import com.shekhar.olaalarma.MainActivity;
+import com.shekhar.olaalarma.R;
 
 /**
  * Created by ShekharKG on 9/27/2015.

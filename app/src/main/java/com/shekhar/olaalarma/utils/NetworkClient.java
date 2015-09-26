@@ -1,15 +1,10 @@
 package com.shekhar.olaalarma.utils;
 
 import android.content.Context;
-import android.location.LocationManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.shekhar.olaalarma.R;
 
 import org.apache.http.Header;
 
@@ -37,7 +32,8 @@ public class NetworkClient {
 
   public static List<String> searchedFor = new ArrayList<>();
 
-  public void getRideAvailability(Context context, final CallBack callBack, RequestParams requestParams, String category) {
+  public void getRideAvailability(Context context, final CallBack callBack,
+                                  RequestParams requestParams, String category) {
 
     AsyncHttpClient client = new AsyncHttpClient();
     client.addHeader(X_APP_TOKEN_KEY, X_APP_TOKEN_VALUE);
@@ -49,7 +45,8 @@ public class NetworkClient {
       client.get(context, BASE_URL, requestParams, new AsyncHttpResponseHandler() {
 
         @Override
-        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                              Throwable throwable) {
 
         }
 

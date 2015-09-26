@@ -12,11 +12,11 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
-import com.shekhar.olaalarma.NotificationGenerator;
 import com.shekhar.olaalarma.beans.Categories;
 import com.shekhar.olaalarma.beans.Category;
 import com.shekhar.olaalarma.utils.CallBack;
 import com.shekhar.olaalarma.utils.NetworkClient;
+import com.shekhar.olaalarma.utils.NotificationGenerator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +48,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack 
     boolean isGPSEnabled = locationManager
         .isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-    ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    ConnectivityManager connectivityManager = (ConnectivityManager) context
+        .getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
     if (!(networkInfo != null && networkInfo.isConnected()))
