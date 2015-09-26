@@ -2,6 +2,7 @@ package com.shekhar.olaalarma.utils;
 
 import android.content.Context;
 
+import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.loopj.android.http.SyncHttpClient;
@@ -29,7 +30,7 @@ public class NetworkClient {
 
   public void getRideAvailability(Context context, final CallBack callBack, RequestParams requestParams) {
 
-    SyncHttpClient client = new SyncHttpClient();
+    AsyncHttpClient client = new AsyncHttpClient();
     client.addHeader(X_APP_TOKEN_KEY, X_APP_TOKEN_VALUE);
 
     client.get(context, BASE_URL, requestParams, new AsyncHttpResponseHandler() {
