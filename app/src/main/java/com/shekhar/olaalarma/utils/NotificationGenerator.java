@@ -22,10 +22,28 @@ public class NotificationGenerator {
 
   private String message;
   private Context context;
+  private int notificationIcon;
 
-  public NotificationGenerator(int notificationCase, String message, Context context) {
+  public NotificationGenerator(int notificationCase, String message, Context context, String cabCategoryID) {
     this.context = context;
     this.message = message;
+
+    if (cabCategoryID == null)
+      notificationIcon = R.mipmap.ic_launcher;
+    else
+      switch (cabCategoryID) {
+        case NetworkClient.MINI:
+          notificationIcon = R.mipmap.ic_launcher;
+          break;
+        case NetworkClient.SEDAN:
+          notificationIcon = R.mipmap.ic_launcher;
+          break;
+        case NetworkClient.PRIME:
+          notificationIcon = R.mipmap.ic_launcher;
+          break;
+        default:
+          notificationIcon = R.mipmap.ic_launcher;
+      }
 
     switch (notificationCase) {
       case NOTIFICATION_CASE_SUCCESS:
@@ -58,7 +76,7 @@ public class NotificationGenerator {
 
         NotificationCompat.Builder mBuilder =
             new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(notificationIcon)
                 .setContentTitle("Ola Alarma")
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(message))
@@ -90,7 +108,7 @@ public class NotificationGenerator {
 
         NotificationCompat.Builder mBuilder =
             new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(notificationIcon)
                 .setContentTitle("Ola Alarma")
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(message))
@@ -123,15 +141,15 @@ public class NotificationGenerator {
 
         NotificationCompat.Builder mBuilder =
             new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(notificationIcon)
                 .setContentTitle("Ola Alarma")
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText("Unfortunately no Ola MINI is nearby, "
                         + message.replace("Your", "instead")))
                 .setAutoCancel(true)
                 .addAction(R.mipmap.ic_launcher, "Snooze", pendingIntent)
-                .addAction(R.mipmap.ic_launcher, "Book Ola", pendingIntent)
-                .addAction(R.mipmap.ic_launcher, "Notify for MINI", pendingIntent)
+                .addAction(R.mipmap.ic_launcher, "Book", pendingIntent)
+                .addAction(R.mipmap.ic_launcher, "Notify", pendingIntent)
                 .setContentText(message);
 
         mBuilder.setContentIntent(pendingIntent);
@@ -159,7 +177,7 @@ public class NotificationGenerator {
 
         NotificationCompat.Builder mBuilder =
             new NotificationCompat.Builder(context)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(notificationIcon)
                 .setContentTitle("Ola Alarma")
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(message))

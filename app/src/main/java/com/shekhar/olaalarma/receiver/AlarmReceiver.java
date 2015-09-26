@@ -27,6 +27,7 @@ import org.json.JSONObject;
 public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack {
 
   private Context context;
+  private int count;
 
   @Override
   public void onReceive(Context context, Intent intent) {
@@ -34,11 +35,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack 
 
     this.context = context;
 
-    String internetAndGpsStatus = getNetworkAndGpsStatus(context);
-    if (internetAndGpsStatus != null)
-      successOperation(internetAndGpsStatus, -1);
-    else
-      getCurrentLocation(NetworkClient.MINI);
+    getCurrentLocation(NetworkClient.MINI);
   }
 
   public String getNetworkAndGpsStatus(Context context) {
@@ -75,16 +72,20 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack 
     if (location == null) {
       location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
     }
-
     callAvailabilityApi(location, category);
   }
 
   private void callAvailabilityApi(Location location, String category) {
+    String internetAndGpsStatus = getNetworkAndGpsStatus(context);
     if (location != null) {
       RequestParams requestParams = new RequestParams();
       requestParams.add(NetworkClient.PICKUP_LAT, String.valueOf(location.getLatitude()));
       requestParams.add(NetworkClient.PICKUP_LNG, String.valueOf(location.getLongitude()));
       new NetworkClient().getRideAvailability(context, this, requestParams, category);
+    } else if (internetAndGpsStatus != null)
+      successOperation(internetAndGpsStatus, -1);
+    else if (count++ < 3) {
+      getCurrentLocation(category);
     }
   }
 
@@ -96,7 +97,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack 
       try {
         JSONObject jsonObject = new JSONObject(response);
         String message = jsonObject.getString("message");
-        new NotificationGenerator(NotificationGenerator.NOTIFICATION_CASE_FAILURE, message, context);
+        new NotificationGenerator(NotificationGenerator.NOTIFICATION_CASE_FAILURE,
+            message, context, null);
       } catch (JSONException e) {
         e.printStackTrace();
       }
@@ -118,7 +120,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack 
           new NotificationGenerator(category.getCabCategoryId().equals(NetworkClient.MINI) ?
               NotificationGenerator.NOTIFICATION_CASE_SUCCESS :
               NotificationGenerator.NOTIFICATION_CASE_DIFFERENT_CAB_AVAILABLE,
-              stringBuilder.toString(), context);
+              stringBuilder.toString(), context, category.getCabCategoryId());
 
         } else
           checkInAnotherCategory();
@@ -138,7 +140,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack 
 
       }
 
-      new NotificationGenerator(NotificationGenerator.NOTIFICATION_CASE_FAILURE, message, context);
+      new NotificationGenerator(NotificationGenerator.NOTIFICATION_CASE_FAILURE,
+          message, context, null);
     }
 
 
@@ -148,7 +151,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack 
     if (NetworkClient.searchedFor.size() > 2) {
       NetworkClient.searchedFor.clear();
       new NotificationGenerator(NotificationGenerator.NOTIFICATION_CASE_NO_CAB_AVAILABLE,
-          "Unfortunately no Cab is available right now!", context);
+          "Unfortunately no Cab is available right now!", context, null);
     } else {
       if (!NetworkClient.searchedFor.contains(NetworkClient.MINI))
         getCurrentLocation(NetworkClient.MINI);
@@ -162,7 +165,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack 
   @Override
   public void failureOperation(String response, int statusCode) {
     new NotificationGenerator(NotificationGenerator.NOTIFICATION_CASE_FAILURE,
-        "Unable to find Ola.", context);
+        "Unable to find Ola.", context, null);
   }
 
 }
