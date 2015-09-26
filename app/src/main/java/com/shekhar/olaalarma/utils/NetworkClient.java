@@ -2,10 +2,9 @@ package com.shekhar.olaalarma.utils;
 
 import android.content.Context;
 
-import com.google.gson.Gson;
-import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.SyncHttpClient;
 
 import org.apache.http.Header;
 
@@ -15,22 +14,22 @@ import org.apache.http.Header;
  */
 public class NetworkClient {
 
-  private final String BASE_URL = "http://sandbox-t.olacabs.com/v1/products";
+  private static final String BASE_URL = "http://sandbox-t.olacabs.com/v1/products";
 
-  private final String X_APP_TOKEN_KEY = "X-APP-Token";
-  private final String X_APP_TOKEN_VALUE = "25878cf1728147e5b6564f2f35b0f4fc";
+  private static final String X_APP_TOKEN_KEY = "X-APP-Token";
+  private static final String X_APP_TOKEN_VALUE = "25878cf1728147e5b6564f2f35b0f4fc";
 
-  private final String PICKUP_LAT = "pickup_lat";
-  private final String PICKUP_LNG = "pickup_lng";
-  private final String CATEGORY = "category";
+  public static final String PICKUP_LAT = "pickup_lat";
+  public static final String PICKUP_LNG = "pickup_lng";
+  public static final String CATEGORY = "category";
 
-  private final String MINI = "mini";
-  private final String SEDAN = "sedan";
-  private final String PRIME = "prime";
+  public static final String MINI = "mini";
+  public static final String SEDAN = "sedan";
+  public static final String PRIME = "prime";
 
-  private void getRideAvailability(Context context, final CallBack callBack, RequestParams requestParams) {
+  public void getRideAvailability(Context context, final CallBack callBack, RequestParams requestParams) {
 
-    AsyncHttpClient client = new AsyncHttpClient();
+    SyncHttpClient client = new SyncHttpClient();
     client.addHeader(X_APP_TOKEN_KEY, X_APP_TOKEN_VALUE);
 
     client.get(context, BASE_URL, requestParams, new AsyncHttpResponseHandler() {
