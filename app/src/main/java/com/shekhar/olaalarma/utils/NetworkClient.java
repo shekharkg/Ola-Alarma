@@ -1,13 +1,20 @@
 package com.shekhar.olaalarma.utils;
 
 import android.content.Context;
+import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.loopj.android.http.SyncHttpClient;
+import com.shekhar.olaalarma.R;
 
 import org.apache.http.Header;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -28,30 +35,36 @@ public class NetworkClient {
   public static final String SEDAN = "sedan";
   public static final String PRIME = "prime";
 
-  public void getRideAvailability(Context context, final CallBack callBack, RequestParams requestParams) {
+  public static List<String> searchedFor = new ArrayList<>();
+
+  public void getRideAvailability(Context context, final CallBack callBack, RequestParams requestParams, String category) {
 
     AsyncHttpClient client = new AsyncHttpClient();
     client.addHeader(X_APP_TOKEN_KEY, X_APP_TOKEN_VALUE);
 
-    client.get(context, BASE_URL, requestParams, new AsyncHttpResponseHandler() {
+    requestParams.add(CATEGORY, category);
+    searchedFor.add(category);
 
-      @Override
-      public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
 
-      }
+      client.get(context, BASE_URL, requestParams, new AsyncHttpResponseHandler() {
 
-      @Override
-      public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-        if (statusCode == 200) {
-          try {
-            callBack.successOperation(new String(responseBody), statusCode);
-          } catch (Exception e) {
-            e.printStackTrace();
-            onFailure(statusCode, headers, responseBody, null);
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable throwable) {
+
+        }
+
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+          if (statusCode == 200) {
+            try {
+              callBack.successOperation(new String(responseBody), statusCode);
+            } catch (Exception e) {
+              e.printStackTrace();
+              onFailure(statusCode, headers, responseBody, null);
+            }
           }
         }
-      }
-    });
-
+      });
   }
+
 }
