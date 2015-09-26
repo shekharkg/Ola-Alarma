@@ -16,9 +16,9 @@ public class Category {
   String getCabCategoryName;
   @SerializedName("currency")
   String currencyUnit;
-  @SerializedName("distance_units")
+  @SerializedName("distance_unit")
   String distanceUnit;
-  @SerializedName("time_units")
+  @SerializedName("time_unit")
   String timeUnits;
   @SerializedName("eta")
   String estimatedArrivalTime;

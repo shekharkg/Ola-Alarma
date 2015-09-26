@@ -12,18 +12,23 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
 import com.shekhar.olaalarma.MainActivity;
 import com.shekhar.olaalarma.R;
+import com.shekhar.olaalarma.beans.Categories;
+import com.shekhar.olaalarma.beans.Category;
 import com.shekhar.olaalarma.utils.CallBack;
 import com.shekhar.olaalarma.utils.NetworkClient;
+
+import org.json.JSONObject;
 
 import java.util.PriorityQueue;
 
 /**
  * Created by ShekharKG on 9/27/2015.
  */
-public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack{
+public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack {
 
   private Context context;
 
@@ -37,7 +42,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack{
 
   void createNotification(int notificationId, String message, PendingIntent contentIntent) {
     try {
-      NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+      NotificationManager mNotificationManager = (NotificationManager)
+          context.getSystemService(Context.NOTIFICATION_SERVICE);
 
       if (contentIntent != null) {
         Log.d("ContentIntent", "contentIntent not found null ");
@@ -49,8 +55,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack{
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(message))
                 .setAutoCancel(true)
-                .addAction(R.mipmap.ic_launcher, "Call", contentIntent)
-                .addAction(R.mipmap.ic_launcher, "Call", contentIntent)
+                .addAction(R.mipmap.ic_launcher, "Snooze", contentIntent)
+                .addAction(R.mipmap.ic_launcher, "Book Ola", contentIntent)
                 .setContentText(message);
 
         mBuilder.setContentIntent(contentIntent);
@@ -67,7 +73,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack{
 
   public void getCurrentLocation() {
     Location location = null;
-    LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+    LocationManager locationManager = (LocationManager) context
+        .getSystemService(Context.LOCATION_SERVICE);
     Location gpsLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
     //Get address using GPS
@@ -94,18 +101,40 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack{
   @Override
   public void successOperation(String response, int statusCode) {
     Log.e("Response", response);
+    try {
+      Categories categories = new Gson().fromJson(response, Categories.class);
+      if (categories.getCategories().size() > 0) {
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setAction(String.valueOf(Math.random()));
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-    Intent intent = new Intent(context, MainActivity.class);
-    intent.putExtra("fromNotification", true);
-    intent.setAction(String.valueOf(Math.random()));
-    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-    createNotification(123, response, PendingIntent.getActivity(context, 0, intent, 0));
+        StringBuilder stringBuilder = new StringBuilder();
+        Category category = categories.getCategories().get(0);
+        stringBuilder.append("Your Ola ").append(category.getGetCabCategoryName()).append(" is ")
+            .append(category.getCabDistance()).append(" ").append(category.getDistanceUnit())
+            .append(" away, will arrive in ").append(category.getEstimatedArrivalTime())
+            .append(" ").append(category.getTimeUnits()).append(".");
+
+        createNotification((int) System.currentTimeMillis(), stringBuilder.toString(),
+            PendingIntent.getActivity(context, 0, intent, 0));
+      }
+    } catch (Exception e) {
+      String message = "";
+      try {
+        JSONObject jsonObject = new JSONObject(response);
+        message = jsonObject.getString("message");
+      } catch (Exception ex) {
+        message = "Unable to find Ola.";
+      }
+      createNotification((int) System.currentTimeMillis(), message, null);
+    }
+
 
   }
 
   @Override
   public void failureOperation(String response, int statusCode) {
-
+    createNotification((int) System.currentTimeMillis(), "Unable to find Ola.", null);
   }
 
 }
