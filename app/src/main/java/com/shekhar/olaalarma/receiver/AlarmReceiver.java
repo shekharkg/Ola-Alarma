@@ -84,9 +84,10 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack 
       new NetworkClient().getRideAvailability(context, this, requestParams, category);
     } else if (internetAndGpsStatus != null)
       successOperation(internetAndGpsStatus, -1);
-    else if (count++ < 3) {
+    else if (count++ < 3)
       getCurrentLocation(category);
-    }
+    else
+      failureOperation("", -1);
   }
 
   @Override
