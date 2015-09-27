@@ -367,8 +367,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
       StorageHelper.storePreference(this, StorageHelper.TIME, timeTV.getText().toString().trim()
           + "##" + amPmTV.getText().toString().trim());
       StorageHelper.storePreference(this, StorageHelper.CATEGORY, selectedCategory);
-      Toast.makeText(MainActivity.this, "Alarm will raise on " + timeTV.getText().toString().trim()
-          + " " + amPmTV.getText().toString().trim(), Toast.LENGTH_SHORT).show();
+      Toast.makeText(MainActivity.this, "Alarm is set", Toast.LENGTH_SHORT).show();
     }
 
 
