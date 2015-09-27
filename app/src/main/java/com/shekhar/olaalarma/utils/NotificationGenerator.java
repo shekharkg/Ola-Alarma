@@ -4,6 +4,9 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -88,6 +91,9 @@ public class NotificationGenerator {
                 .setContentText(message);
 
         mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+        mBuilder.setLights(Color.RED, 3000, 3000);
+        mBuilder.setSound(Uri.parse(String.valueOf(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))));
         mNotificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
       } else {
         Log.d("ContentIntent", "contentIntent found null ");
@@ -125,6 +131,9 @@ public class NotificationGenerator {
                 .setContentText("Unfortunately no Ola is available nearby. :(");
 
         mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+        mBuilder.setLights(Color.RED, 3000, 3000);
+        mBuilder.setSound(Uri.parse(String.valueOf(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))));
         mNotificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
       } else {
         Log.d("ContentIntent", "contentIntent found null ");
@@ -173,6 +182,9 @@ public class NotificationGenerator {
                 .setContentText(message);
 
         mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+        mBuilder.setLights(Color.RED, 3000, 3000);
+        mBuilder.setSound(Uri.parse(String.valueOf(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))));
         mNotificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
       } else {
         Log.d("ContentIntent", "contentIntent found null ");
@@ -215,6 +227,9 @@ public class NotificationGenerator {
                 .setContentText(message);
 
         mBuilder.setContentIntent(pendingIntent);
+        mBuilder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+        mBuilder.setLights(Color.RED, 3000, 3000);
+        mBuilder.setSound(Uri.parse(String.valueOf(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))));
         mNotificationManager.notify((int) System.currentTimeMillis(), mBuilder.build());
       } else {
         Log.d("ContentIntent", "contentIntent found null ");
