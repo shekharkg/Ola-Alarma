@@ -121,7 +121,7 @@ public class NotificationGenerator {
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(message))
                 .setAutoCancel(true)
-                .addAction(R.drawable.notify, "Notify when available!", actionNotifyIntent)
+                .addAction(0, "Notify when available!", actionNotifyIntent)
                 .setContentText("Unfortunately no Ola is available nearby. :(");
 
         mBuilder.setContentIntent(pendingIntent);
@@ -167,9 +167,9 @@ public class NotificationGenerator {
                     .bigText("Unfortunately no Ola MINI is nearby, "
                         + message.replace("Your", "instead")))
                 .setAutoCancel(true)
-                .addAction(R.drawable.snooze, "Snooze", actionSnoozeIntent)
-                .addAction(notificationIcon, "Book", actionBookIntent)
-                .addAction(R.drawable.notify, "Notify", actionNotifyIntent)
+                .addAction(0, "Snooze", actionSnoozeIntent)
+                .addAction(0, "Book", actionBookIntent)
+                .addAction(0, "Notify", actionNotifyIntent)
                 .setContentText(message);
 
         mBuilder.setContentIntent(pendingIntent);
@@ -210,8 +210,8 @@ public class NotificationGenerator {
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(message))
                 .setAutoCancel(true)
-                .addAction(R.drawable.snooze, "Snooze", actionSnoozeIntent)
-                .addAction(notificationIcon, "Book Ola", actionBookIntent)
+                .addAction(0, "Snooze", actionSnoozeIntent)
+                .addAction(0, "Book Ola", actionBookIntent)
                 .setContentText(message);
 
         mBuilder.setContentIntent(pendingIntent);
