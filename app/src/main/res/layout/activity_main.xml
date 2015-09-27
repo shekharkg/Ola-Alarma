@@ -2,19 +2,237 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@android:color/white"
                 android:paddingBottom="@dimen/activity_vertical_margin"
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:paddingTop="@dimen/activity_vertical_margin"
                 tools:context=".MainActivity">
 
+  <RelativeLayout
+    android:id="@+id/noAlarmAddedLL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:visibility="visible">
+
+    <ImageView
+      android:layout_width="90dp"
+      android:layout_height="90dp"
+      android:layout_above="@+id/underline"
+      android:layout_centerHorizontal="true"
+      android:src="@drawable/alarm"/>
+
+    <TextView
+      android:id="@+id/underline"
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_centerInParent="true"/>
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/underline"
+      android:layout_centerHorizontal="true"
+      android:fontFamily="sans-serif-condensed"
+      android:text="No alarm!"
+      android:textColor="@android:color/darker_gray"
+      android:textSize="22sp"/>
+
+  </RelativeLayout>
+
+
+  <LinearLayout
+    android:id="@+id/selectedTimeLL"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Select preferred category"/>
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="40dp"
+      android:orientation="horizontal"
+      android:weightSum="3">
+
+      <ImageView
+        android:id="@+id/miniIV"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/mini"/>
+
+      <ImageView
+        android:id="@+id/sedanIV"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/sedan"/>
+
+      <ImageView
+        android:id="@+id/primeIV"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:src="@drawable/prime"/>
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp">
+
+      <TextView
+        android:id="@+id/timeTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-condensed"
+        android:text="09:22"
+        android:textSize="55sp"/>
+
+      <TextView
+        android:id="@+id/amPmTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/timeTV"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_toEndOf="@+id/timeTV"
+        android:layout_toRightOf="@+id/timeTV"
+        android:fontFamily="sans-serif-condensed"
+        android:text="am"
+        android:textSize="22sp"/>
+
+    </RelativeLayout>
+
+    <CheckBox
+      android:id="@+id/repeatCB"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:fontFamily="sans-serif-condensed"
+      android:text="Repeat"
+      android:textColor="@android:color/darker_gray"/>
+
+    <LinearLayout
+      android:id="@+id/daysLL"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:orientation="horizontal"
+      android:visibility="gone"
+      android:weightSum="7">
+
+      <TextView
+        android:id="@+id/su"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_unselected"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="Su"/>
+
+      <TextView
+        android:id="@+id/m"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_unselected"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="M"/>
+
+      <TextView
+        android:id="@+id/t"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_unselected"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="T"/>
+
+      <TextView
+        android:id="@+id/w"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_unselected"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="W"/>
+
+      <TextView
+        android:id="@+id/th"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_unselected"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="Th"/>
+
+      <TextView
+        android:id="@+id/f"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_unselected"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="F"/>
+
+      <TextView
+        android:id="@+id/s"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_weight="1"
+        android:background="@drawable/button_unselected"
+        android:fontFamily="sans-serif-condensed"
+        android:gravity="center"
+        android:text="S"/>
+
+    </LinearLayout>
+
+    <ImageView
+      android:id="@+id/delete"
+      android:layout_width="35dp"
+      android:layout_height="35dp"
+      android:layout_marginLeft="16dp"
+      android:layout_marginTop="16dp"
+      android:padding="4dp"
+      android:src="@drawable/trash"/>
+
+  </LinearLayout>
+
   <Button
-    android:id="@+id/testButton"
-    android:layout_width="wrap_content"
+    android:id="@+id/dummyAlarmSet"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true"
-    android:padding="10dp"
-    android:text="Test"/>
+    android:layout_alignParentBottom="true"
+    android:text="Raise alarm in 20 seconds"/>
 
 
 </RelativeLayout>

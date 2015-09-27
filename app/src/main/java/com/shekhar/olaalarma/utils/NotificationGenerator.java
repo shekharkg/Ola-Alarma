@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.shekhar.olaalarma.MainActivity;
 import com.shekhar.olaalarma.R;
+import com.shekhar.olaalarma.receiver.AlarmReceiver;
 
 /**
  * Created by ShekharKG on 9/27/2015.
@@ -19,6 +20,9 @@ public class NotificationGenerator {
   public static final int NOTIFICATION_CASE_DIFFERENT_CAB_AVAILABLE = 2;
   public static final int NOTIFICATION_CASE_NO_CAB_AVAILABLE = 3;
   public static final int NOTIFICATION_CASE_FAILURE = -1;
+
+  public static final int SNOOZE_INTENT = 5;
+  public static final int NOTIFY_INTENT = 6;
 
   private String message;
   private Context context;
@@ -33,13 +37,13 @@ public class NotificationGenerator {
     else
       switch (cabCategoryID) {
         case NetworkClient.MINI:
-          notificationIcon = R.mipmap.ic_launcher;
+          notificationIcon = R.drawable.mini;
           break;
         case NetworkClient.SEDAN:
-          notificationIcon = R.mipmap.ic_launcher;
+          notificationIcon = R.drawable.sedan;
           break;
         case NetworkClient.PRIME:
-          notificationIcon = R.mipmap.ic_launcher;
+          notificationIcon = R.drawable.prime;
           break;
         default:
           notificationIcon = R.mipmap.ic_launcher;
@@ -99,6 +103,10 @@ public class NotificationGenerator {
     intent.setAction(String.valueOf(Math.random()));
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
+    Intent notifyIntent = new Intent(context, AlarmReceiver.class);
+    notifyIntent.putExtra("notifyIntent", NOTIFY_INTENT);
+    PendingIntent actionNotifyIntent = PendingIntent.getBroadcast(context, 0, notifyIntent, 0);
+
     try {
       NotificationManager mNotificationManager = (NotificationManager)
           context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -113,7 +121,7 @@ public class NotificationGenerator {
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(message))
                 .setAutoCancel(true)
-                .addAction(R.mipmap.ic_launcher, "Notify when available!", pendingIntent)
+                .addAction(R.drawable.notify, "Notify when available!", actionNotifyIntent)
                 .setContentText("Unfortunately no Ola is available nearby. :(");
 
         mBuilder.setContentIntent(pendingIntent);
@@ -132,6 +140,18 @@ public class NotificationGenerator {
     intent.setAction(String.valueOf(Math.random()));
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
+    Intent snoozeIntent = new Intent(context, AlarmReceiver.class);
+    snoozeIntent.putExtra("snoozeIntent", SNOOZE_INTENT);
+    PendingIntent actionSnoozeIntent = PendingIntent.getBroadcast(context, 0, snoozeIntent, 0);
+
+    Intent bookIntent = new Intent(context, MainActivity.class);
+    bookIntent.putExtra("book_ola", true);
+    PendingIntent actionBookIntent = PendingIntent.getActivity(context, 0, bookIntent, 0);
+
+    Intent notifyIntent = new Intent(context, AlarmReceiver.class);
+    notifyIntent.putExtra("notifyIntent", NOTIFY_INTENT);
+    PendingIntent actionNotifyIntent = PendingIntent.getBroadcast(context, 0, notifyIntent, 0);
+
     try {
       NotificationManager mNotificationManager = (NotificationManager)
           context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -147,9 +167,9 @@ public class NotificationGenerator {
                     .bigText("Unfortunately no Ola MINI is nearby, "
                         + message.replace("Your", "instead")))
                 .setAutoCancel(true)
-                .addAction(R.mipmap.ic_launcher, "Snooze", pendingIntent)
-                .addAction(R.mipmap.ic_launcher, "Book", pendingIntent)
-                .addAction(R.mipmap.ic_launcher, "Notify", pendingIntent)
+                .addAction(R.drawable.snooze, "Snooze", actionSnoozeIntent)
+                .addAction(notificationIcon, "Book", actionBookIntent)
+                .addAction(R.drawable.notify, "Notify", actionNotifyIntent)
                 .setContentText(message);
 
         mBuilder.setContentIntent(pendingIntent);
@@ -168,6 +188,14 @@ public class NotificationGenerator {
     intent.setAction(String.valueOf(Math.random()));
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
+    Intent snoozeIntent = new Intent(context, AlarmReceiver.class);
+    snoozeIntent.putExtra("snoozeIntent", SNOOZE_INTENT);
+    PendingIntent actionSnoozeIntent = PendingIntent.getBroadcast(context, 0, snoozeIntent, 0);
+
+    Intent bookIntent = new Intent(context, MainActivity.class);
+    bookIntent.putExtra("book_ola", true);
+    PendingIntent actionBookIntent = PendingIntent.getActivity(context, 0, bookIntent, 0);
+
     try {
       NotificationManager mNotificationManager = (NotificationManager)
           context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -182,8 +210,8 @@ public class NotificationGenerator {
                 .setStyle(new NotificationCompat.BigTextStyle()
                     .bigText(message))
                 .setAutoCancel(true)
-                .addAction(R.mipmap.ic_launcher, "Snooze", pendingIntent)
-                .addAction(R.mipmap.ic_launcher, "Book Ola", pendingIntent)
+                .addAction(R.drawable.snooze, "Snooze", actionSnoozeIntent)
+                .addAction(notificationIcon, "Book Ola", actionBookIntent)
                 .setContentText(message);
 
         mBuilder.setContentIntent(pendingIntent);

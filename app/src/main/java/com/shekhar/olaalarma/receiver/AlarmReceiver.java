@@ -1,6 +1,9 @@
 package com.shekhar.olaalarma.receiver;
 
 
+import android.app.AlarmManager;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
@@ -9,14 +12,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
+import com.shekhar.olaalarma.asynctask.CheckAvailabilityAsync;
 import com.shekhar.olaalarma.beans.Categories;
 import com.shekhar.olaalarma.beans.Category;
 import com.shekhar.olaalarma.utils.CallBack;
 import com.shekhar.olaalarma.utils.NetworkClient;
 import com.shekhar.olaalarma.utils.NotificationGenerator;
+import com.shekhar.olaalarma.utils.StorageHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,9 +39,35 @@ public class AlarmReceiver extends WakefulBroadcastReceiver implements CallBack 
   public void onReceive(Context context, Intent intent) {
     Log.e("Receiver", "Alarm");
 
+    int snoozeIntent = intent.getIntExtra("snoozeIntent", 0);
+    int notifyIntent = intent.getIntExtra("notifyIntent", 0);
+
+    if (snoozeIntent != 0) {
+      Intent intent1 = new Intent(context, AlarmReceiver.class);
+      PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+          (int) System.currentTimeMillis(), intent1, 0);
+      ((AlarmManager) context.getSystemService(Context.ALARM_SERVICE))
+          .set(AlarmManager.RTC, System.currentTimeMillis() + 30 * 1000, pendingIntent);
+
+      Toast.makeText(context, "30 second snooze is set.", Toast.LENGTH_LONG).show();
+
+      NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+      manager.cancelAll();
+      return;
+    } else if (notifyIntent != 0) {
+      new CheckAvailabilityAsync().execute();
+      Toast.makeText(context, "Will notify you when Ola will available.", Toast.LENGTH_LONG).show();
+      NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+      manager.cancelAll();
+      return;
+    }
+
     this.context = context;
 
-    getCurrentLocation(NetworkClient.MINI);
+    String category = StorageHelper.getPreference(context, StorageHelper.CATEGORY);
+    if (category.isEmpty())
+      return;
+    getCurrentLocation(category);
   }
 
   public String getNetworkAndGpsStatus(Context context) {
