@@ -26,6 +26,7 @@ import com.shekhar.olaalarma.utils.NetworkClient;
 import com.shekhar.olaalarma.utils.StorageHelper;
 
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -331,7 +332,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     mTimePicker = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
       @Override
       public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-        setAlarm(selectedHour, selectedMinute);
+        setAlarm(timePicker);
         if (selectedHour > 12) {
           selectedHour = selectedHour % 12;
           amPmTV.setText("pm");
@@ -352,39 +353,25 @@ public class MainActivity extends Activity implements View.OnClickListener {
     mTimePicker.show();
   }
 
-  private void setAlarm(int selectedHour, int selectedMinute) {
+  private void setAlarm(TimePicker timePicker) {
 
     Calendar calendar = Calendar.getInstance();
-    long currentTime = calendar.getTimeInMillis() / 1000;
+    calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
+    calendar.set(Calendar.SECOND, 0);
 
-    calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
-    calendar.set(Calendar.MINUTE, selectedMinute);
-
-    if (selectedHour > 12)
-      calendar.set(Calendar.AM_PM, 1);
-    else
-      calendar.set(Calendar.AM_PM, 0);
-
-    long alarmTime = calendar.getTimeInMillis();
-
-    if (alarmTime > currentTime) {
-      Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
-      // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-      PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,
-          (int) System.currentTimeMillis(), intent, 0);
-      // get the alarm manager, and schedule an alarm that calls the receiver
-      ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, alarmTime, pendingIntent);
-      Calendar c = Calendar.getInstance();
-      c.setTimeInMillis(alarmTime);
-      StorageHelper.storePreference(this, StorageHelper.CATEGORY, selectedCategory);
-      Toast.makeText(MainActivity.this, "Alarm will raise on " + selectedHour + ":"
-          + selectedMinute, Toast.LENGTH_SHORT).show();
-
-//    int seconds = (int) (milliseconds / 1000) % 60 ;
-//    int minutes = (int) ((milliseconds / (1000*60)) % 60);
-//    int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
-    }
-
+    Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+    // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this,
+        (int) System.currentTimeMillis(), intent, 0);
+    // get the alarm manager, and schedule an alarm that calls the receiver
+    ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC_WAKEUP,
+        calendar.getTimeInMillis(), pendingIntent);
+      /*Calendar c = Calendar.getInstance();
+      c.setTimeInMillis(alarmTime);*/
+    StorageHelper.storePreference(this, StorageHelper.CATEGORY, selectedCategory);
+    Toast.makeText(MainActivity.this, "Alarm will raise on " + timePicker.getCurrentHour() + ":"
+        + timePicker.getCurrentMinute() + " " + (timePicker.getCurrentHour() < 12 ? " am" : " pm")
+        , Toast.LENGTH_SHORT).show();
 
   }
 }
