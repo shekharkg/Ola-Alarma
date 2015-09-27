@@ -313,9 +313,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
       case R.id.dummyAlarmSet:
         Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, (int) System.currentTimeMillis(), intent, 0);
-        ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, System.currentTimeMillis() + 20 * 1000, pendingIntent);
-        Toast.makeText(MainActivity.this, "Alarm set to " + 20 + " seconds.", Toast.LENGTH_SHORT).show();
+        PendingIntent pendingIntent = PendingIntent
+            .getBroadcast(MainActivity.this, (int) System.currentTimeMillis(), intent, 0);
+        ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC,
+            System.currentTimeMillis() + 20 * 1000, pendingIntent);
+        Toast.makeText(MainActivity.this, "Alarm set to " + 20 + " seconds.",
+            Toast.LENGTH_SHORT).show();
         break;
     }
   }
@@ -339,6 +342,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
             + (selectedMinute < 10 ? ("0" + selectedMinute) : selectedMinute));
         noAlarmAddedLL.setVisibility(View.GONE);
         selectedTimeLL.setVisibility(View.VISIBLE);
+
+
+        StorageHelper.storePreference(MainActivity.this, StorageHelper.TIME, timeTV.getText()
+            .toString().trim() + "##" + amPmTV.getText().toString().trim());
       }
     }, hour, minute, true);//Yes 24 hour time
     mTimePicker.setTitle("Select Time");
@@ -348,10 +355,15 @@ public class MainActivity extends Activity implements View.OnClickListener {
   private void setAlarm(int selectedHour, int selectedMinute) {
 
     Calendar calendar = Calendar.getInstance();
-    long currentTime = calendar.getTimeInMillis();
+    long currentTime = calendar.getTimeInMillis() / 1000;
 
-    calendar.add(Calendar.HOUR_OF_DAY, selectedHour);
-    calendar.add(Calendar.MINUTE, selectedMinute);
+    calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+    calendar.set(Calendar.MINUTE, selectedMinute);
+
+    if (selectedHour > 12)
+      calendar.set(Calendar.AM_PM, 1);
+    else
+      calendar.set(Calendar.AM_PM, 0);
 
     long alarmTime = calendar.getTimeInMillis();
 
@@ -364,11 +376,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
       ((AlarmManager) getSystemService(ALARM_SERVICE)).set(AlarmManager.RTC, alarmTime, pendingIntent);
       Calendar c = Calendar.getInstance();
       c.setTimeInMillis(alarmTime);
-      StorageHelper.storePreference(this, StorageHelper.TIME, timeTV.getText().toString().trim()
-          + "##" + amPmTV.getText().toString().trim());
       StorageHelper.storePreference(this, StorageHelper.CATEGORY, selectedCategory);
-      Toast.makeText(MainActivity.this, "Alarm will raise on " + timeTV.getText().toString().trim()
-          + " " + amPmTV.getText().toString().trim(), Toast.LENGTH_SHORT).show();
+      Toast.makeText(MainActivity.this, "Alarm will raise on " + selectedHour + ":"
+          + selectedMinute, Toast.LENGTH_SHORT).show();
+
+//    int seconds = (int) (milliseconds / 1000) % 60 ;
+//    int minutes = (int) ((milliseconds / (1000*60)) % 60);
+//    int hours   = (int) ((milliseconds / (1000*60*60)) % 24);
     }
 
 
